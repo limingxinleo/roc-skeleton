@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  roc:
+    image: "limingxinleo/roc-skeleton:latest"
+    build:
+      context: "."
+    networks:
+      - net
+    restart: "always"
+  client:
+    image: "limingxinleo/roc-client:latest"
+    build:
+      context: "test"
+    environment:
+      APP_ENV: "${APP_ENV:-prod}"
+      ROC_HOST: "roc"
+    networks:
+      - net
+    restart: "always"
+networks:
+  net:
