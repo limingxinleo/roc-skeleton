@@ -20,7 +20,7 @@ unit:
   before_script:
     - cp .env.example .env
   script:
-    - git clone https://github.com/limingxinleo/roc-client.git test | echo "Download Test Client"
+    - git clone https://github.com/limingxinleo/roc-client.git test
     - APP_ENV=test docker-compose up -d --remove-orphans --build
     - docker exec $(basename $(pwd))_client_1 composer test
   after_script:
