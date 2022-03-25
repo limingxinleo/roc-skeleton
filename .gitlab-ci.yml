@@ -22,7 +22,6 @@ unit:
   script:
     - git clone https://github.com/limingxinleo/roc-client.git test | echo "Download Test Client"
     - APP_ENV=test docker-compose up -d --remove-orphans --build
-    - docker exec $(basename $(pwd))_client_1 composer install
     - docker exec $(basename $(pwd))_client_1 composer test
   after_script:
     - docker-compose down
