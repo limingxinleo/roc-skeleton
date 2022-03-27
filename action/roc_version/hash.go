@@ -14,7 +14,7 @@ type Hash struct {
 }
 
 type HashRequest struct {
-	User UserDTO
+	User *UserDTO
 }
 
 func (h *HashRequest) UnmarshalJSON(bytes []byte) error {
@@ -39,19 +39,23 @@ type HashDTO struct {
 	Version string `json:"version"`
 }
 
-func (h *Hash) Handle(packet *roc.Packet, serializer serializer.SerializerInterface) (any, exception.ExceptionInterface) {
-	//id := packet.GetId()
-	body := packet.GetBody()
-
+func (h *Hash) getRequest(packet *roc.Packet, serializer serializer.SerializerInterface) (*HashRequest, exception.ExceptionInterface) {
 	req := &formatter.JsonRPCRequest[*HashRequest, any]{}
 
-	if err := serializer.UnSerialize(body, req); err != nil {
+	if err := serializer.UnSerialize(packet.GetBody(), req); err != nil {
 		return nil, exception.NewDefaultException(err.Error())
 	}
 
-	user := req.Data.User
+	return req.Data, nil
+}
 
-	return &HashDTO{Version: h.toHash(&user)}, nil
+func (h *Hash) Handle(packet *roc.Packet, serializer serializer.SerializerInterface) (any, exception.ExceptionInterface) {
+	req, e := h.getRequest(packet, serializer)
+	if e != nil {
+		return nil, e
+	}
+
+	return &HashDTO{Version: h.toHash(req.User)}, nil
 }
 
 func (h *Hash) toHash(user *UserDTO) string {
