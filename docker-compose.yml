@@ -4,6 +4,8 @@ services:
     image: "limingxinleo/roc-skeleton:latest"
     build:
       context: "."
+    environment:
+      APP_ENV: "${APP_ENV:-prod}"
     networks:
       - net
     restart: "always"
