@@ -30,7 +30,7 @@ func (h *HashRequest) UnmarshalJSON(bytes []byte) error {
 }
 
 type UserDTO struct {
-	Id    int    `json:"id"`
+	Id    int32  `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }

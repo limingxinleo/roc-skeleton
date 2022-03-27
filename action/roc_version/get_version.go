@@ -4,11 +4,12 @@ import (
 	"github.com/hyperf/roc"
 	"github.com/hyperf/roc/exception"
 	"github.com/hyperf/roc/serializer"
+	"os"
 )
 
 type GetVersion struct {
 }
 
 func (v *GetVersion) Handle(packet *roc.Packet, serializer serializer.SerializerInterface) (any, exception.ExceptionInterface) {
-	return "v1.0.0", nil
+	return os.Getenv("APP_VERSION"), nil
 }

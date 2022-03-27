@@ -7,6 +7,7 @@ import (
 	"github.com/hyperf/roc/formatter"
 	"github.com/hyperf/roc/router"
 	"github.com/hyperf/roc/server"
+	"github.com/joho/godotenv"
 	"github.com/limingxinleo/roc-skeleton/action/roc_version"
 )
 
@@ -18,6 +19,8 @@ func SetUpRouters() *router.SimpleRouter {
 }
 
 func main() {
+	_ = godotenv.Load()
+
 	r := SetUpRouters()
 
 	handler := server.NewTcpServerHandler(func(route *formatter.JsonRPCRoute, packet *roc.Packet, server *server.TcpServer) (any, exception.ExceptionInterface) {

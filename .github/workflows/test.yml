@@ -43,6 +43,7 @@ jobs:
           php --ri swoole
       - name: Setup JSON RPC Server
         run: |
+          cp .env.example .env
           docker build . -t roc
           docker run -p 9501:9501 --rm --name roc_server -d roc:latest
       - name: Show Environment
