@@ -1,14 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"github.com/hyperf/roc"
 	"github.com/hyperf/roc/exception"
 	"github.com/hyperf/roc/formatter"
+	"github.com/hyperf/roc/log"
 	"github.com/hyperf/roc/router"
 	"github.com/hyperf/roc/server"
 	"github.com/joho/godotenv"
 	"github.com/limingxinleo/roc-skeleton/action/roc_version"
+	"go.uber.org/zap"
 )
 
 func SetUpRouters() *router.SimpleRouter {
@@ -24,7 +25,7 @@ func main() {
 	r := SetUpRouters()
 
 	handler := server.NewTcpServerHandler(func(route *formatter.JsonRPCRoute, packet *roc.Packet, server *server.TcpServer) (any, exception.ExceptionInterface) {
-		fmt.Println("Receive path: " + route.Path)
+		log.Logger().Info("RPC", zap.String("path", route.Path))
 
 		action, ok := r.Routes[route.Path]
 		if !ok {
