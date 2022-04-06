@@ -10,6 +10,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/limingxinleo/roc-skeleton/action/roc_version"
 	"go.uber.org/zap"
+	"time"
 )
 
 func SetUpRouters() *router.SimpleRouter {
@@ -25,14 +26,27 @@ func main() {
 	r := SetUpRouters()
 
 	handler := server.NewTcpServerHandler(func(route *formatter.JsonRPCRoute, packet *roc.Packet, server *server.TcpServer) (any, exception.ExceptionInterface) {
-		log.Logger().Info("RPC", zap.String("path", route.Path))
+		name := zap.String("name", "RPC")
+		log.Logger().Info("RPC_RECEIVED", name, zap.String("path", route.Path))
+		now := time.Now()
 
 		action, ok := r.Routes[route.Path]
 		if !ok {
+			log.Logger().Warn("The route is not defined.", name, zap.String("path", route.Path))
 			return nil, &exception.Exception{Code: exception.NOT_FOUND, Message: "The route is not defined."}
 		}
 
-		return action.Handle(packet, server.Serializer)
+		ret, e := action.Handle(packet, server.Serializer)
+
+		// 记录接口调用时间
+		time := time.Now().UnixMilli() - now.UnixMilli()
+		if time > 200 {
+			log.Logger().Error("RPC_TIME", name, zap.String("path", route.Path), zap.Int64("time", time))
+		} else {
+			log.Logger().Info("RPC_TIME", name, zap.String("path", route.Path), zap.Int64("time", time))
+		}
+
+		return ret, e
 	})
 
 	serv := server.NewTcpServer("0.0.0.0:9501", handler)
