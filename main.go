@@ -39,11 +39,11 @@ func main() {
 		ret, e := action.Handle(packet, server.Serializer)
 
 		// 记录接口调用时间
-		time := time.Now().UnixMilli() - now.UnixMilli()
-		if time > 200 {
-			log.Logger().Error("RPC_TIME", name, zap.String("path", route.Path), zap.Int64("time", time))
+		t := time.Now().UnixMilli() - now.UnixMilli()
+		if t > 200 {
+			log.Logger().Error("RPC_TIME", name, zap.String("path", route.Path), zap.Int64("time", t))
 		} else {
-			log.Logger().Info("RPC_TIME", name, zap.String("path", route.Path), zap.Int64("time", time))
+			log.Logger().Info("RPC_TIME", name, zap.String("path", route.Path), zap.Int64("time", t))
 		}
 
 		return ret, e
