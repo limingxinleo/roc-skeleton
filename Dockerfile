@@ -17,6 +17,7 @@ RUN GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w" -installsuffix cgo -o mai
 
 FROM scratch
 
+LABEL maintainer="limx <l@hyperf.io>" version="1.0" license="MIT" app.name="roc"
 ENV APP_ENV=prod
 
 COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
